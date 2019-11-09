@@ -1,9 +1,6 @@
 import os
 import io
 import colorsys
-import requests
-
-from bs4 import BeautifulSoup
 
 from google.cloud import vision
 from google.cloud.vision import types
@@ -95,38 +92,13 @@ def get_playlist_ids(song_attributes):
 	# 		print(row["name"])
 	return playlist
 
-def get_lyrics(song_title, artist_name):
-    # https://github.com/willamesoares/lyrics-crawler
-    token_file = open("genius_api_token.txt","r") 
-    token = token_file.readline()[:-1]
-    token_file.close() 
-
-    base_url = 'https://api.genius.com'
-    headers = {'Authorization': 'Bearer ' + token}
-    search_url = base_url + '/search'
-    data = {'q': song_title + ' ' + artist_name}
-    response = requests.get(search_url, data=data, headers=headers)
-    json = response.json()
-    remote_song_info = None
-
-    for hit in json['response']['hits']:
-        if artist_name.lower() in hit['result']['primary_artist']['name'].lower():
-            remote_song_info = hit
-            break
-    if remote_song_info is None:
-        return ""
+def words_contained(words, text):
+    # return #words in words an text / # words in words
+    set_words = set(words)
+    if len(set_words) == 0:
+        return 0
     else:
-        song_url = remote_song_info['result']['url']
-        return scrap_song_url(song_url)
-
-def scrap_song_url(url):
-    # https://github.com/willamesoares/lyrics-crawler
-    page = requests.get(url)
-    html = BeautifulSoup(page.text, 'html.parser')
-    [h.extract() for h in html('script')]
-    lyrics = html.find('div', class_='lyrics').get_text()
-
-    return lyrics
+        return len(set_words.intersection(set(text.split()))) / len(set_words)
 
 if __name__ == "__main__":
     image_attr = get_image_attributes("data/bright.jpg")
