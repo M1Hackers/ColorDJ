@@ -95,7 +95,7 @@ def get_playlist_ids(song_attributes):
 def words_contained(words, text):
     # return #words in words an text / # words in words
     set_words = set(words)
-    if len(set_words) == 0:
+    if len(set_words) == 0 or text is None:
         return 0
     else:
         return len(set_words.intersection(set(text.split()))) / len(set_words)
