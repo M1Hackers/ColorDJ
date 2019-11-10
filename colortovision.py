@@ -33,6 +33,18 @@ def get_image_attributes(song_file):
     label_response = client.label_detection(image=image)
     labels = label_response.label_annotations
 
+    object_response = client.object_localization(image=image)
+	
+	# objects
+    object_annotations = object_response.localized_object_annotations
+    object_names = [obj.name for obj in object_annotations]
+    title = object_names[0]
+    label_names = [l.description.lower() for l in labels]
+    for object_name in object_names:
+	    if object_name.lower() in label_names:
+		    title = object_name
+		    break
+
     # Performs color detection on the image file.
     color_response = client.image_properties(image=image)
     color_props = color_response.image_properties_annotation
@@ -96,6 +108,7 @@ def get_image_attributes(song_file):
         "labels": Counter({label.description.lower(): label.score for label in labels}),
         "temp_score": 1 - temperature,
         "feelings": emotion,
+		"title": title
     }
 
 
