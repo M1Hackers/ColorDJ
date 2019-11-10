@@ -1,3 +1,4 @@
+import io
 import spotipy
 import os
 import random
@@ -33,7 +34,7 @@ def retrieve_already_token():
 # tracks is a list of IDs
 # main_label is a string
 # returns: URL of playlist
-def make_playlist(filename, main_label, tracks):
+def make_playlist(image, main_label, tracks):
     token = retrieve_spotify_token()
     sp = spotipy.Spotify(auth=token)
     # sp = spotipy.Spotify(auth=retrieve_already_token())
@@ -58,19 +59,17 @@ def make_playlist(filename, main_label, tracks):
 
     # resize the image and encode
     basewidth = 300
-    img = Image.open(filename)
+    img = Image.open(image)
     wpercent = (basewidth/float(img.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
-    img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-    img.save(filename) 
-
-    with open(filename, "rb") as image_file:
-        jpg_text_encoded = base64.b64encode(image_file.read())
-        # print(jpg_text_encoded)
-
-        # add original image as playlist cover image
-        endpoint_url = "https://api.spotify.com/v1/playlists/" + playlist["id"] + "/images"
-        response = requests.put(endpoint_url, data=jpg_text_encoded, headers={"Authorization":"Bearer {}".format(token), "Content-Type":"image/jpeg"})
+    img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+    resized_image = io.BytesIO()
+    img.save(resized_image, 'jpeg')
+    resized_image.seek(0)
+    jpg_text_encoded = base64.b64encode(resized_image.read())
+    # add original image as playlist cover image
+    endpoint_url = "https://api.spotify.com/v1/playlists/" + playlist["id"] + "/images"
+    requests.put(endpoint_url, data=jpg_text_encoded, headers={"Authorization": "Bearer {}".format(token), "Content-Type": "image/jpeg"})
     return playlist["external_urls"]['spotify']
 
 
