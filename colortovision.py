@@ -11,7 +11,6 @@ from google.cloud.language import types as language_types
 
 import pandas as pd
 import numpy as np
-
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "ColorDJ-c6da10562c7b.json"
 
 def get_image_attributes(song_file):
@@ -56,8 +55,10 @@ def get_image_attributes(song_file):
 	# print("total:weight: ", total_weight)
 
 	sentiment_text = ""
+	label_list = []
 	for label in labels:
 		sentiment_text += label.description + " "
+		label_list.append(label.description)
 
 	document = language_types.Document(
 		content=sentiment_text[:-1],

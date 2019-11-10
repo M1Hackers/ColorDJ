@@ -3,7 +3,6 @@ import os
 import random
 import requests
 import json
-import urllib2
 import base64
 from PIL import Image
 
@@ -34,7 +33,8 @@ def retrieve_already_token():
 # returns: URL of playlist
 def make_playlist(filename, main_label, tracks):
     filename = filename.split(".")
-    sp = spotipy.Spotify(auth=retrieve_spotify_token())
+    token = retrieve_spotify_token()
+    sp = spotipy.Spotify(auth=token)
     # sp = spotipy.Spotify(auth=retrieve_already_token())
 
     r = random.randint(0,1000)
@@ -42,29 +42,29 @@ def make_playlist(filename, main_label, tracks):
     sp.user_playlist_add_tracks(username, playlist["id"], tracks)
     return playlist["external_urls"]['spotify']
 
-    # resize the image
+    # resize the image and encode
     basewidth = 300
     img = Image.open(filename)
     wpercent = (basewidth/float(img.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
     img = img.resize((basewidth,hsize), Image.ANTIALIAS)
     img.save(filename) 
+
+    jpg_text_encoded = 'jpg1_b64 = \\\n"""' + base64.encodestring(open(filename,"rb").read()) + '"""'
+
     # add original image as playlist cover image
     endpoint_url = "https://api.spotify.com/v1/playlists/{playlist_id}/images"
-
     request_body = json.dumps({
               "playlist_id": playlist["id"],
-              "Content-Type": base64.urlencode
+              "Content-Type": jpg_text_encoded
               "public": False
             })
 
-
-    response = requests.post(url = endpoint_url, data = request_body, headers={"Content-Type":"application/json", 
+    response = requests.put(url = endpoint_url, data = request_body, headers={"Content-Type":"application/json", 
                             "Authorization":f"Bearer {token}"})
-
-    url = response.json()['external_urls']['spotify']
     print(response.status_code)
 
+
 if __name__ == "__main__":
-    url = make_playlist("bright", ['6DCZcSspjsKoFjzjrWoCdn', '6V1bu6o1Yo5ZXnsCJU8Ovk', '76cy1WJvNGJTj78UqeA5zr', '1rfofaqEpACxVEHIZBJe6W', '3swc6WTsr7rl9DqQKQA55C'])
+    url = make_playlist("bright", "", ['6DCZcSspjsKoFjzjrWoCdn', '6V1bu6o1Yo5ZXnsCJU8Ovk', '76cy1WJvNGJTj78UqeA5zr', '1rfofaqEpACxVEHIZBJe6W', '3swc6WTsr7rl9DqQKQA55C'])
     print(url)
