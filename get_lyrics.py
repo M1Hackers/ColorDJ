@@ -1,4 +1,6 @@
 import requests
+import sys
+
 from bs4 import BeautifulSoup
 import pandas as pd
 
@@ -7,9 +9,9 @@ def get_lyrics(song_title, artist_name):
     song_title = song_title.replace('?', '')
     artist_name = artist_name.replace('?', '')
     # https://github.com/willamesoares/lyrics-crawler
-    token_file = open("genius_api_token.txt","r") 
+    token_file = open("genius_api_token.txt", "r")
     token = token_file.readline()[:-1]
-    token_file.close() 
+    token_file.close()
 
     base_url = 'https://api.genius.com'
     headers = {'Authorization': 'Bearer ' + token}
@@ -18,8 +20,6 @@ def get_lyrics(song_title, artist_name):
     response = requests.get(search_url, data=data, headers=headers)
     json = response.json()
     remote_song_info = None
-
-
 
     for hit in json['response']['hits']:
         if artist_name.lower() in hit['result']['primary_artist']['name'].lower():
@@ -35,6 +35,7 @@ def get_lyrics(song_title, artist_name):
         song_url = remote_song_info['result']['url']
         return scrap_song_url(song_url)
 
+
 def scrap_song_url(url):
     # https://github.com/willamesoares/lyrics-crawler
     page = requests.get(url)
@@ -45,7 +46,11 @@ def scrap_song_url(url):
     return lyrics
 
 
-songs = pd.read_csv("data/top2018.csv")
-songs["lyrics"] = songs.apply(lambda row: get_lyrics(row["name"], row["artists"]) , axis=1)
-
-songs.to_csv("data/top2018_lyrics.csv")
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("No filename provided")
+        exit()
+    fname = sys.argv[1].rsplit(".", 1)[0]
+    songs = pd.read_csv(fname + ".csv")
+    songs["lyrics"] = songs.apply(lambda row: get_lyrics(row["name"], row["artists"]), axis=1)
+    songs.to_csv(fname + "_lyrics.csv")
