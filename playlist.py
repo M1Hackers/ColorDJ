@@ -1,34 +1,27 @@
 import io
-import spotipy
-import os
-import random
-import requests
 import json
+import random
 import base64
+
 from PIL import Image
+import requests
+import spotipy
+import spotipy.util as sputil
 
-username = '6zqf0q9qifvh19a2wyub582ms'
+import config
 
-emojis = [':D', ':)', ':O',':/',"o.o",";_;", "XD", "T.T", ">:(", ":')", ":|", ";)"]
 
-import spotipy.util as util
+emojis = [':D', ':)', ':O','://',"o.o",";_;", "XD", "T.T", ">:(", ":')", ":|", ";)"]
 
-def retrieve_client_info():
-    f = open("spotify_key.txt")
-    g = f.readlines()
-    return g[0][:-1], g[1][:-1]
 
 def retrieve_spotify_token():
-    client_id, client_secret = retrieve_client_info()
-    # print(client_id, client_secret)
-    token = util.prompt_for_user_token(username, scope='playlist-modify-private,playlist-modify-public,ugc-image-upload', client_id=client_id, client_secret=client_secret, redirect_uri='https://localhost:8080')
-    # print("TOKEN: " , token)
+    token = sputil.prompt_for_user_token(
+        config.spotify_username,
+        scope='playlist-modify-private,playlist-modify-public,ugc-image-upload',
+        client_id=config.spotify_client_id,
+        client_secret=config.spotify_client_secret,
+        redirect_uri='https://localhost:8080')
     return token
-
-def retrieve_already_token():
-    f = open("spotify_key.txt")
-    g = f.readlines()
-    return g[2][:-1]
 
 # FUNCTION YOU WANT TO CALL FROM MAIN 
 # tracks is a list of IDs
@@ -37,11 +30,10 @@ def retrieve_already_token():
 def make_playlist(image_bytes, main_label, tracks):
     token = retrieve_spotify_token()
     sp = spotipy.Spotify(auth=token)
-    # sp = spotipy.Spotify(auth=retrieve_already_token())
 
     r = random.randint(0, len(emojis)) 
     print(emojis[r])
-    playlist = sp.user_playlist_create(username, f"{main_label} {emojis[r]}")
+    playlist = sp.user_playlist_create(config.spotify_username, f"{main_label} {emojis[r]}")
 
     quote = requests.get("http://quotes.rest/qod.json").json()
     desc = "Perfection is not attainable, but if we chase perfection we can catch excellence... - Vince Lombardi"
@@ -54,8 +46,7 @@ def make_playlist(image_bytes, main_label, tracks):
     endpoint_url_desc = "https://api.spotify.com/v1/playlists/" + playlist["id"]
     response_desc = requests.put(endpoint_url_desc, data=desc_json, headers={"Authorization":"Bearer {}".format(token), "Content-Type":"application/json"})
 
-
-    sp.user_playlist_add_tracks(username, playlist["id"], tracks)
+    sp.user_playlist_add_tracks(config.spotify_username, playlist["id"], tracks)
 
     # resize the image and encode
     basewidth = 300

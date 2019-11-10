@@ -111,4 +111,5 @@ twilio.env
 .vscode/
 
 # Project files
+config.py
 ColorDJ-*.json

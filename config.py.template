@@ -1,0 +1,8 @@
+"""Secret keys for ColorDJ."""
+
+# Fill in these keys and rename the file to secrets.py
+spotify_username = '{fill in}'
+spotify_client_id = '{fill in}'
+spotify_client_secret = '{fill in}'
+genius_api_token = '{fill in}'
+google_credentials_file = 'ColorDJ-{fill in}.json'
