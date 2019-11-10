@@ -1,2 +1,8 @@
 Flask>=0.12
 twilio~=6.0.0
+numpy
+pandas
+colour-science
+google-cloud-vision
+google-cloud-language
+spotipy
