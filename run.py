@@ -17,7 +17,7 @@ def sms_ahoy_reply():
     if request.values['NumMedia'] != '0':
 
         # Use the message SID as a filename.
-        filename = request.values['MessageSid']+ '.png'
+        filename = request.values['MessageSid']+ '.jpg'
         with open('{}/{}'.format("./images", filename), 'wb') as f:
            image_url = request.values['MediaUrl0']
            f.write(requests.get(image_url).content)
