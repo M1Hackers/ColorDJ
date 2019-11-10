@@ -67,7 +67,9 @@ def get_image_attributes(song_file):
         h, l, s = colorsys.rgb_to_hls(color.color.red/255, color.color.green/255, color.color.blue/255)
         saturation += color.score * s
         lightness += color.score * l
-        temperature += color_to_temperature(color.color)
+        t = color_to_temperature(color.color)
+        if 1000 <= t <= 16000:
+            temperature += color.score * (t - 1000) / 15000
         total_weight += color.score
 
     saturation = saturation / total_weight
@@ -92,7 +94,7 @@ def get_image_attributes(song_file):
         "sentiment_score": sentiment_score,
         "sentiment_mag": sentiment_mag,
         "labels": Counter({label.description.lower(): label.score for label in labels}),
-        "temperature": temperature,
+        "temp_score": 1 - temperature,
         "feelings": emotion,
     }
 
@@ -113,11 +115,13 @@ def get_playlist_ids(song_attributes):
     with open("data/top2005_2017_lyrics_wordfreqs.pkl", "rb") as f:
         top_lyrics = pickle.load(f)
     force_mode = 1 if song_attributes["sentiment_score"] >= 0 else 0
+    print(song_attributes["temp_score"])
     distance = {}
     for index, row in top.iterrows():
         danceability = float(row["danceability"])
         valence = float(row["valence"])
         energy = float(row["energy"])
+        liveness = float(row["liveness"])
         if force_mode != row["mode"]:
             continue
         keyword_freqs = top_lyrics.get(row["id"], Counter())
@@ -128,7 +132,8 @@ def get_playlist_ids(song_attributes):
         color_distance = (
             (danceability - song_attributes["saturation"])**2
             + (valence - song_attributes["lightness"]) ** 2
-            + (energy - song_attributes["sentiment_mag"]) ** 2) ** 0.5
+            + (energy - song_attributes["sentiment_mag"]) ** 2
+            + (liveness - song_attributes["temp_score"]) ** 2) ** 0.5
         distance[row["id"]] = color_distance * word_score
 
     sorted_sims = sorted(distance.items(), key=lambda kv: kv[1])
