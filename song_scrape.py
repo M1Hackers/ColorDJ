@@ -2,6 +2,7 @@ import pandas as pandas
 import requests
 import spotipy.util as util
 import numpy as np
+import pandas as pd
 PLAYLIST_ID = "2fQ59B3on45R3rgcfnKDbD"
 username = '6zqf0q9qifvh19a2wyub582ms'
 
@@ -65,6 +66,27 @@ def write_playlist_to_csv(song_dict):
         file.write(CSV)
     print("Success")
 
+def get_artist_songname():
+    songs = []
+    artists = []
+    top2018 = pd.read_csv("data/top2005_2017_new.csv")
+    token = retrieve_spotify_token()
+    for index, row in top2018.iterrows():
+        song_id = row["id"]
+        endpoint_url = "https://api.spotify.com/v1/tracks/" + song_id
+        song_response = requests.get(endpoint_url, headers={"Authorization":"Bearer {}".format(token)})
+        song_response = song_response.json()
+        artist = song_response['artists'][0]["name"]
+        song_name = song_response["name"]
+
+        songs.append(song_name)
+        artists.append(artist)
+    top2018['name'] = songs
+    top2018['artists'] = artists
+
+    top2018.to_csv("data/top2005_2017_new.csv")
+
 if __name__ == "__main__":
-    song_dict = scrape_playlist(PLAYLIST_ID)
-    write_playlist_to_csv(song_dict)
+    # song_dict = scrape_playlist(PLAYLIST_ID)
+    # write_playlist_to_csv(song_dict)
+    get_artist_songname()
