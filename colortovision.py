@@ -12,6 +12,8 @@ from google.cloud.language import types as language_types
 import pandas as pd
 import numpy as np
 
+import random
+
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "ColorDJ-c6da10562c7b.json"
 
 
@@ -34,6 +36,26 @@ def get_image_attributes(song_file):
     # Performs color detection on the image file.
     color_response = client.image_properties(image=image)
     color_props = color_response.image_properties_annotation
+
+    # Performs face / feeling detection on the image file
+    face_response = client.face_detection(image=image)
+    faces = face_response.face_annotations
+    # Names of likelihood from google.cloud.vision.enums
+    likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
+                       'LIKELY', 'VERY_LIKELY')
+    joy = 0
+    anger = 0
+    sorrow = 0
+    for face in faces:
+        if ((face.anger_likelihood == 4) | (face.anger_likelihood == 5)):
+            anger += 1
+        if ((face.joy_likelihood == 4) | (face.joy_likelihood == 5)):
+            joy += 1
+        if ((face.sorrow_likelihood == 4) | (face.sorrow_likelihood == 5)):
+            sorrow += 1
+
+    emotion = max([["pos", joy], ["neg", anger], ["neg", sorrow]], key = lambda x: x[1])[0]
+    # print(emotion)
 
     saturation = 0
     lightness = 0
@@ -71,6 +93,7 @@ def get_image_attributes(song_file):
         "sentiment_mag": sentiment_mag,
         "labels": [label.description for label in labels],
         "temperature": temperature,
+        "feelings": emotion,
     }
 
 
@@ -84,6 +107,7 @@ def get_playlist_ids(song_attributes):
             "sentiment_mag" : (float) sentiment magnitude of an image [0, inf]
             "labels" : (list of string) labels in image
             "temperature" : (float) temperature of image
+            "feelings" : (string) "pos" or "neg", facial emotions in the image
     """
     top2018 = pd.read_csv("data/top2005_2017.csv")
     force_mode = 1 if song_attributes["sentiment_score"] >= 0 else 0
@@ -99,6 +123,19 @@ def get_playlist_ids(song_attributes):
     sorted_sims = sorted(similarity_euclid.items(), key=lambda kv: kv[1])
 
     playlist = [song[0] for song in sorted_sims[:5]]
+    ## add five songs randomly by emotion
+    print(song_attributes["feelings"])
+    songs_by_feelings = []
+    if (song_attributes["feelings"] == "pos"):
+        df = pd.read_csv("data/songs_by_sentiment_pos.csv")
+        songs_by_feelings = random.sample(df.values.tolist(), 5)
+    else:
+        df = pd.read_csv("data/songs_by_sentiment_neg.csv")
+        songs_by_feelings = random.sample(df.values.tolist(), 5)
+
+    # print(songs_by_feelings)
+    for song in songs_by_feelings:
+        playlist.append(song[1])
 
     return playlist
 
@@ -117,7 +154,9 @@ def color_to_temperature(color):
     return colour.xy_to_CCT(colour.XYZ_to_xy(xyz), 'hernandez1999')
 
 
+
+
 if __name__ == "__main__":
-    image_attr = get_image_attributes("data/bright.jpg")
+    image_attr = get_image_attributes("data/upset.jpg")
     playlist = get_playlist_ids(image_attr)
     print(playlist)
