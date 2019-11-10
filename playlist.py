@@ -8,7 +8,7 @@ from PIL import Image
 
 username = '6zqf0q9qifvh19a2wyub582ms'
 
-emojis = [':D', ':)', ':O','://',"o.o",";_;", "XD", "T.T", ">:(", ":')", ":|", ";)"]
+emojis = [':D', ':)', ':O',':/',"o.o",";_;", "XD", "T.T", ">:(", ":')", ":|", ";)"]
 
 import spotipy.util as util
 
@@ -38,8 +38,22 @@ def make_playlist(filename, main_label, tracks):
     sp = spotipy.Spotify(auth=token)
     # sp = spotipy.Spotify(auth=retrieve_already_token())
 
-    r = random.randint(0, 1000)
-    playlist = sp.user_playlist_create(username, f"{main_label}_{r}")
+    r = random.randint(0, len(emojis)) 
+    print(emojis[r])
+    playlist = sp.user_playlist_create(username, f"{main_label} {emojis[r]}")
+
+    quote = requests.get("http://quotes.rest/qod.json").json()
+    desc = "Perfection is not attainable, but if we chase perfection we can catch excellence... - Vince Lombardi"
+    if 'contents' in quote.keys():
+        desc_new = quote['contents']['quotes'][0]['quote'] + ' - ' + quote['contents']['quotes'][0]['author']
+        desc = desc_new if len(desc_new) < 101 else desc
+
+    print(desc)
+    desc_json = json.dumps({"description": desc})
+    endpoint_url_desc = "https://api.spotify.com/v1/playlists/" + playlist["id"]
+    response_desc = requests.put(endpoint_url_desc, data=desc_json, headers={"Authorization":"Bearer {}".format(token), "Content-Type":"application/json"})
+
+
     sp.user_playlist_add_tracks(username, playlist["id"], tracks)
 
     # resize the image and encode

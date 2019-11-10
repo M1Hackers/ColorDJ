@@ -38,12 +38,14 @@ def get_image_attributes(song_file):
 	# objects
     object_annotations = object_response.localized_object_annotations
     object_names = [obj.name for obj in object_annotations]
-    title = object_names[0]
-    label_names = [l.description.lower() for l in labels]
-    for object_name in object_names:
-	    if object_name.lower() in label_names:
-		    title = object_name
-		    break
+    title = labels[0].description
+    if len(object_names) > 0:
+        title = object_names[0]
+        label_names = [l.description.lower() for l in labels]
+        for object_name in object_names:
+    	    if object_name.lower() in label_names:
+    		    title = object_name
+    		    break
 
     # Performs color detection on the image file.
     color_response = client.image_properties(image=image)
