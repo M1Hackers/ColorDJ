@@ -72,7 +72,7 @@ def get_image_attributes(song_file):
 # "sentiment_score": (float) sentiment value of an image [-1,1]
 # "sentiment_mag" : (float) sentiment magnitude (how strong the emos are) of an image [0, inf]
 def get_playlist_ids(song_attributes):
-	top2018 = pd.read_csv("data/top2018.csv")
+	top2018 = pd.read_csv("data/top2018_lyrics.csv")
 	force_mode = 1 if song_attributes["sentiment_score"] >= 0 else 0
 	similarity_euclid = {}
 	for index, row in top2018.iterrows():
@@ -104,4 +104,3 @@ if __name__ == "__main__":
     image_attr = get_image_attributes("data/bright.jpg")
     playlist = get_playlist_ids(image_attr)
     print(playlist)
-    print(get_lyrics("God's Plan", "Drake"))
