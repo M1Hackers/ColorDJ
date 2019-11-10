@@ -27,7 +27,7 @@ def sms_ahoy_reply():
         song_ids = get_playlist_ids(image_attr)
 
         playlist_link = make_playlist(
-            filepath, image_attr["labels"][0], song_ids)
+            filepath, image_attr["labels"].most_common(1)[0][0], song_ids)
 
         print(playlist_link)
         resp.message("spotify playlist link is " + playlist_link)

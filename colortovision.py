@@ -1,16 +1,16 @@
-import os
-import io
+from collections import Counter
 import colorsys
-import colour
+import os
+import pickle
 
+import colour
 from google.cloud import vision
 from google.cloud.vision import types
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types as language_types
-
-import pandas as pd
-import numpy as np
+import pandas
+import numpy
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "ColorDJ-c6da10562c7b.json"
 
@@ -22,7 +22,7 @@ def get_image_attributes(song_file):
     file_name = os.path.abspath(song_file)
 
     # Loads the image into memory.
-    with io.open(file_name, 'rb') as image_file:
+    with open(file_name, 'rb') as image_file:
         content = image_file.read()
 
     image = types.Image(content=content)
@@ -69,7 +69,7 @@ def get_image_attributes(song_file):
         "lightness": lightness,
         "sentiment_score": sentiment_score,
         "sentiment_mag": sentiment_mag,
-        "labels": [label.description for label in labels],
+        "labels": Counter({label.description.lower(): label.score for label in labels}),
         "temperature": temperature,
     }
 
@@ -82,21 +82,32 @@ def get_playlist_ids(song_attributes):
             "lightness" : (float) lightness value of an image [0,1]
             "sentiment_score": (float) sentiment value of an image [-1,1]
             "sentiment_mag" : (float) sentiment magnitude of an image [0, inf]
-            "labels" : (list of string) labels in image
+            "labels" : (dict) labels in image
             "temperature" : (float) temperature of image
     """
-    top2018 = pd.read_csv("data/top2005_2017_new.csv")
+    top = pandas.read_csv("data/top2005_2017_new.csv")
+    with open("data/top2005_2017_lyrics_wordfreqs.pkl", "rb") as f:
+        top_lyrics = pickle.load(f)
     force_mode = 1 if song_attributes["sentiment_score"] >= 0 else 0
-    similarity_euclid = {}
-    for index, row in top2018.iterrows():
+    distance = {}
+    for index, row in top.iterrows():
         danceability = float(row["danceability"])
         valence = float(row["valence"])
         energy = float(row["energy"])
         if force_mode != row["mode"]:
             continue
-        similarity_euclid[row["id"]] = ((danceability - song_attributes["saturation"])**2 + (valence - song_attributes["lightness"]) ** 2 + (song_attributes["sentiment_mag"] - energy) ** 2) ** 0.5
+        keyword_freqs = top_lyrics.get(row["id"], Counter())
+        word_score = 1
+        for kw in keyword_freqs & song_attributes["labels"]:
+            word_score *= 1 - keyword_freqs[kw]
+            word_score *= 1 - song_attributes["labels"][kw]
+        color_distance = (
+            (danceability - song_attributes["saturation"])**2
+            + (valence - song_attributes["lightness"]) ** 2
+            + (energy - song_attributes["sentiment_mag"]) ** 2) ** 0.5
+        distance[row["id"]] = color_distance * word_score
 
-    sorted_sims = sorted(similarity_euclid.items(), key=lambda kv: kv[1])
+    sorted_sims = sorted(distance.items(), key=lambda kv: kv[1])
 
     playlist = [song[0] for song in sorted_sims[:5]]
 
@@ -113,7 +124,8 @@ def words_contained(words, text):
 
 
 def color_to_temperature(color):
-    xyz = colour.sRGB_to_XYZ(np.array([color.red, color.green, color.blue]) / 255)
+    xyz = colour.sRGB_to_XYZ(
+        numpy.array([color.red, color.green, color.blue]) / 255)
     return colour.xy_to_CCT(colour.XYZ_to_xy(xyz), 'hernandez1999')
 
 
