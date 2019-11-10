@@ -138,10 +138,10 @@ def get_playlist_ids(song_attributes):
     print(song_attributes["feelings"])
     songs_by_feelings = []
     if (song_attributes["feelings"] == "pos"):
-        df = pd.read_csv("data/songs_by_sentiment_pos.csv")
+        df = pandas.read_csv("data/songs_by_sentiment_pos.csv")
         songs_by_feelings = random.sample(df.values.tolist(), 5)
     else:
-        df = pd.read_csv("data/songs_by_sentiment_neg.csv")
+        df = pandas.read_csv("data/songs_by_sentiment_neg.csv")
         songs_by_feelings = random.sample(df.values.tolist(), 5)
 
     # print(songs_by_feelings)
