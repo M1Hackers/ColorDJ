@@ -1,6 +1,7 @@
 import os
 import io
 import colorsys
+import colour
 
 from google.cloud import vision
 from google.cloud.vision import types
@@ -36,17 +37,20 @@ def get_image_attributes(song_file):
 
 	saturation = 0
 	lightness = 0
+	temperature = 0
 	total_weight = 0
 	sorted_colors = sorted(color_props.dominant_colors.colors, key=lambda color:color.score, reverse=True)
 	for color in sorted_colors[:5]:
 		h, l ,s = colorsys.rgb_to_hls(color.color.red/255, color.color.green/255, color.color.blue/255)
 		saturation += color.score * s
 		lightness += color.score * l
+		temperature += color_to_temperature(color)
 		total_weight += color.score
 
 	color_dict = {}
 	saturation = saturation / total_weight
 	lightness = lightness / total_weight
+        temperature = temperature / total_weight
 	# print("Saturated: ", saturation)
 	# print("Light: ", lightness)
 	# print("total:weight: ", total_weight)
@@ -65,7 +69,7 @@ def get_image_attributes(song_file):
 	sentiment_score = sentiment.score
 	sentiment_mag = sentiment.magnitude
 
-        return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag, "labels":labels}
+        return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag, "labels":labels, "temperature":temperature}
 
 # song_attributes dictionary:
 # "saturation" : (float) saturation value of an image [0,1]
@@ -73,6 +77,7 @@ def get_image_attributes(song_file):
 # "sentiment_score": (float) sentiment value of an image [-1,1]
 # "sentiment_mag" : (float) sentiment magnitude (how strong the emos are) of an image [0, inf]
 # "labels" : (list of string) labels in image
+# "temperature" : (float) temperature of image
 def get_playlist_ids(song_attributes):
 	top2018 = pd.read_csv("data/top2018_edit.csv")
 	force_mode = 1 if song_attributes["sentiment_score"] >= 0 else 0
@@ -102,6 +107,10 @@ def words_contained(words, text):
         return 0
     else:
         return len(set_words.intersection(set(text.split()))) / len(set_words)
+
+def color_to_temperature(color):
+    xyz = colour.sRGB_to_XYZ([color.color.red/255, color.color.green/255, color.color.blue/255])
+    return colour.xy_to_CCT(colour.XYZ_to_xy(xyz), 'hernandez1999')
 
 if __name__ == "__main__":
     image_attr = get_image_attributes("data/bright.jpg")
