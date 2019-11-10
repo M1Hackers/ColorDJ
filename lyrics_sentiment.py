@@ -24,7 +24,7 @@ def add_song_to_sentiment_list(song_id, song_feeling):
 	songs_by_sentiment[song_feeling].append(song_id)
 
 
-songs = pd.read_csv("data/top2018_lyrics.csv")
+songs = pd.read_csv("data/top2005_2017_lyrics.csv")
 songs_by_sentiment = {"pos": [], "neg": []}
 
 songs["feelings"] = songs.apply(lambda row: get_song_feelings(row["id"], row["lyrics"]), axis=1)
@@ -38,5 +38,5 @@ df_neg = pd.DataFrame(songs_by_sentiment["neg"])
 # pritn(df_neg)
 df_pos.to_csv("data/songs_by_sentiment_pos.csv")
 df_neg.to_csv("data/songs_by_sentiment_neg.csv")
-songs.to_csv("data/top2018_lyrics_feelings.csv")
+songs.to_csv("data/top2005_2017_lyrics_feelings.csv")
 
