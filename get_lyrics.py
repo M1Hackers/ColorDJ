@@ -4,6 +4,8 @@ import pandas as pd
 
 def get_lyrics(song_title, artist_name):
     print(song_title)
+    song_title = song_title.replace('?', '')
+    artist_name = artist_name.replace('?', '')
     # https://github.com/willamesoares/lyrics-crawler
     token_file = open("genius_api_token.txt","r") 
     token = token_file.readline()[:-1]
