@@ -12,25 +12,30 @@ def retrieve_client_info():
 
 def retrieve_spotify_token():
     client_id, client_secret = retrieve_client_info()
-    print(client_id, client_secret)
+    # print(client_id, client_secret)
     token = util.prompt_for_user_token(username, scope='playlist-modify-private,playlist-modify-public', client_id=client_id, client_secret=client_secret, redirect_uri='https://localhost:8080')
-    print("TOKEN: " , token)
+    # print("TOKEN: " , token)
     return token
 
 def retrieve_already_token():
     f = open("spotify_key.txt")
     g = f.readlines()
     return g[2][:-1]
-# playlist is a list of IDs
-def make_playlist(filename, tracks):
+
+# FUNCTION YOU WANT TO CALL FROM MAIN 
+# tracks is a list of IDs
+# main_label is a string
+# returns: URL of playlist
+def make_playlist(main_label, tracks):
     filename = filename.split(".")
-    # sp = spotipy.Spotify(auth=retrieve_spotify_token())
-    sp = spotipy.Spotify(auth=retrieve_already_token())
+    sp = spotipy.Spotify(auth=retrieve_spotify_token())
+    # sp = spotipy.Spotify(auth=retrieve_already_token())
 
     r = random.randint(0,1000)
-    playlist = sp.user_playlist_create(username, filename[0] + "_" + str(r))
-    print(playlist)
+    playlist = sp.user_playlist_create(username, main_label + "_" + str(r))
     sp.user_playlist_add_tracks(username, playlist["id"], tracks)
+    return playlist["external_urls"]['spotify']
 
 if __name__ == "__main__":
-    make_playlist("bright.jpg", ['2xGjteMU3E1tkEPVFBO08', '1gm616Plq4ScqNi7TVkZ5', '0tgVpDi06FyKpA1z0VMD4', '63SevszngYpZOwf63o61K', '1bhUWB0zJMIKr9yVPrkEu', '7vGuf3Y35N4wmASOKLUVV', '5k38wzpLb15YgncyWdTZE', '5OCJzvD7sykQEKHH7qAC3', '3EPXxR3ImUwfayaurPi3c', '4eWQlBRaTjPPUlzacqEeo'])
+    url = make_playlist("bright", ['6DCZcSspjsKoFjzjrWoCdn', '6V1bu6o1Yo5ZXnsCJU8Ovk', '76cy1WJvNGJTj78UqeA5zr', '1rfofaqEpACxVEHIZBJe6W', '3swc6WTsr7rl9DqQKQA55C'])
+    print(url)

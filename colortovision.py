@@ -10,7 +10,7 @@ from google.cloud.language import types as language_types
 
 import pandas as pd
 import numpy as np
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "ColorDJ-12658b766abb.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "ColorDJ-c6da10562c7b.json"
 
 def get_image_attributes(song_file):
 	client = vision.ImageAnnotatorClient()
@@ -72,7 +72,7 @@ def get_image_attributes(song_file):
 # "sentiment_score": (float) sentiment value of an image [-1,1]
 # "sentiment_mag" : (float) sentiment magnitude (how strong the emos are) of an image [0, inf]
 def get_playlist_ids(song_attributes):
-	top2018 = pd.read_csv("data/top2018.csv")
+	top2018 = pd.read_csv("data/top2018_edit.csv")
 	force_mode = 1 if song_attributes["sentiment_score"] >= 0 else 0
 	similarity_euclid = {}
 	for index, row in top2018.iterrows():
@@ -85,7 +85,7 @@ def get_playlist_ids(song_attributes):
 
 	sorted_sims = sorted(similarity_euclid.items(), key=lambda kv: kv[1])
 
-	playlist = [song[0] for song in sorted_sims[:10]]
+	playlist = [song[0] for song in sorted_sims[:5]]
 
 	# for index, row in top2018.iterrows():
 	# 	if row["id"] in playlist:
@@ -104,4 +104,4 @@ if __name__ == "__main__":
     image_attr = get_image_attributes("data/bright.jpg")
     playlist = get_playlist_ids(image_attr)
     print(playlist)
-    print(get_lyrics("God's Plan", "Drake"))
+    # print(get_lyrics("God's Plan", "Drake"))
