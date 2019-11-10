@@ -85,7 +85,7 @@ def get_playlist_ids(song_attributes):
             "labels" : (dict) labels in image
             "temperature" : (float) temperature of image
     """
-    top = pandas.read_csv("data/top2005_2017_new.csv")
+    top = pandas.read_csv("data/top2005_2017.csv")
     with open("data/top2005_2017_lyrics_wordfreqs.pkl", "rb") as f:
         top_lyrics = pickle.load(f)
     force_mode = 1 if song_attributes["sentiment_score"] >= 0 else 0
