@@ -111,4 +111,5 @@ twilio.env
 .vscode/
 
 # Project files
+images/
 ColorDJ-*.json

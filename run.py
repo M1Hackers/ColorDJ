@@ -1,36 +1,35 @@
 """Main server script for ColorDJ."""
-import io
+import os
 import requests
-
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
-
 from colortovision import get_image_attributes, get_playlist_ids
 from playlist import make_playlist
-
 
 app = Flask(__name__)
 
 
 @app.route("/sms", methods=['GET', 'POST'])
-def songify_sms_image():
-    """Respond to incoming images with the URL to a new Spotify playlist."""
+def sms_reply():
+    """Respond to incoming messages with a friendly SMS."""
     resp = MessagingResponse()
 
     if request.values['NumMedia'] != '0':
-        # Download user image.
-        image_url = request.values['MediaUrl0']
-        image = io.BytesIO(requests.get(image_url).content)
 
-        # Analyze image using Cloud Vision API.
-        image_attr = get_image_attributes(image)
+        # Use the message SID as a filename.
+        filename = request.values['MessageSid'] + '.jpg'
+        filepath = os.path.join(os.getcwd(), "images", filename)
+        with open(filepath, 'wb') as f:
+            image_url = request.values['MediaUrl0']
+            f.write(requests.get(image_url).content)
 
-        # Retrieve a list of relevant songs.
+        image_attr = get_image_attributes(filepath)
         song_ids = get_playlist_ids(image_attr)
 
-        # Create a Spotify playlist.
-        playlist_link = make_playlist(image, image_attr["title"], song_ids)
+        playlist_link = make_playlist(
+            filepath, image_attr["title"], song_ids)
 
+        print(playlist_link)
         resp.message("Listen to your new playlist at " + playlist_link)
     else:
         resp.message("Try sending a picture message.")
