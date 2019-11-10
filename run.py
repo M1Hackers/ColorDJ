@@ -4,6 +4,7 @@ import requests
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from colortovision import *
+from playlist import *
 
 app = Flask(__name__)
 
@@ -24,9 +25,12 @@ def sms_ahoy_reply():
         resp.message("Thanks for the image!")
         filepath = "./images/" + filename
         image_attr = get_image_attributes(filepath)
-        playlist = get_playlist_ids(image_attr)
-        print(playlist)
-        resp.message("spotify playlist link" + playlist[0])
+        song_ids = get_playlist_ids(image_attr)
+
+        playlist_link = make_playlist(filepath, song_ids)
+
+        print(playlist_link)
+        resp.message("spotify playlist link is " + playlist_link)
     else:
         resp.message("Try sending a picture message.")
     
