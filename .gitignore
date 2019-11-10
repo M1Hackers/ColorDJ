@@ -104,6 +104,9 @@ venv.bak/
 .mypy_cache/
 twilio.env
 
+# spotipy
+.cache-*
+
 # VS Code
 .vscode/
 
