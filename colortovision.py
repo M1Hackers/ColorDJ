@@ -92,7 +92,16 @@ def get_playlist_ids(song_attributes):
 	# 		print(row["name"])
 	return playlist
 
+def words_contained(words, text):
+    # return #words in words an text / # words in words
+    set_words = set(words)
+    if len(set_words) == 0 or text is None:
+        return 0
+    else:
+        return len(set_words.intersection(set(text.split()))) / len(set_words)
+
 if __name__ == "__main__":
     image_attr = get_image_attributes("data/bright.jpg")
     playlist = get_playlist_ids(image_attr)
     print(playlist)
+    print(get_lyrics("God's Plan", "Drake"))
