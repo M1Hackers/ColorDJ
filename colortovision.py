@@ -1,5 +1,5 @@
 import os
-import io
+# import io
 import colorsys
 
 from google.cloud import vision
@@ -10,7 +10,8 @@ from google.cloud.language import types as language_types
 
 import pandas as pd
 import numpy as np
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "ColorDJ-12658b766abb.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "ColorDJ-12658b766abb.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 def get_image_attributes(song_file):
 	client = vision.ImageAnnotatorClient()
@@ -65,7 +66,7 @@ def get_image_attributes(song_file):
 	sentiment_mag = sentiment.magnitude
 
 	return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag}
-
+	
 # song_attributes dictionary:
 # "saturation" : (float) saturation value of an image [0,1]
 # "lightness" : (float) lightness value of an image [0,1]
