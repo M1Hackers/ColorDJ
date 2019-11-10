@@ -64,13 +64,14 @@ def get_image_attributes(song_file):
 	sentiment_score = sentiment.score
 	sentiment_mag = sentiment.magnitude
 
-	return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag}
+        return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag, "labels":labels}
 
 # song_attributes dictionary:
 # "saturation" : (float) saturation value of an image [0,1]
 # "lightness" : (float) lightness value of an image [0,1]
 # "sentiment_score": (float) sentiment value of an image [-1,1]
 # "sentiment_mag" : (float) sentiment magnitude (how strong the emos are) of an image [0, inf]
+# "labels" : (list of string) labels in image
 def get_playlist_ids(song_attributes):
 	top2018 = pd.read_csv("data/top2018_edit.csv")
 	force_mode = 1 if song_attributes["sentiment_score"] >= 0 else 0
@@ -89,6 +90,7 @@ def get_playlist_ids(song_attributes):
 
 	# for index, row in top2018.iterrows():
 	# 	if row["id"] in playlist:
+        #Add a like or dislike rating to a video or remove a rating from a video. Try it now.
 	# 		print(row["name"])
 	return playlist
 
@@ -105,3 +107,4 @@ if __name__ == "__main__":
     playlist = get_playlist_ids(image_attr)
     print(playlist)
     # print(get_lyrics("God's Plan", "Drake"))
+
