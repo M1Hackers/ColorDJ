@@ -11,10 +11,8 @@ def get_song_feelings(song_id, song_lyric):
 	# for each row / song, grab id and lyrics
 	if not isinstance(song_lyric, float):
 		song_sentiment = TextBlob(song_lyric, analyzer=NaiveBayesAnalyzer()).sentiment
-		song_feeling = song_sentiment[0];
-		song_pos_prob = song_sentiment[1];
-		song_neg_prob = song_sentiment[2];
-		# print("hello")
+		song_feeling = song_sentiment[0]
+		
 		add_song_to_sentiment_list(song_id, song_feeling)
 		return song_feeling
 	add_song_to_sentiment_list(song_id, "pos")
