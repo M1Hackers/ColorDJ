@@ -18,12 +18,17 @@ def get_lyrics(song_title, artist_name):
     remote_song_info = None
 
 
+
     for hit in json['response']['hits']:
         if artist_name.lower() in hit['result']['primary_artist']['name'].lower():
             remote_song_info = hit
             break
     if remote_song_info is None:
-        return None
+        # retry with only first word
+        if len(song_title.split()) > 1:
+            return get_lyrics(song_title.split()[0], artist_name)
+        else:
+            return None
     else:
         song_url = remote_song_info['result']['url']
         return scrap_song_url(song_url)
