@@ -61,13 +61,13 @@ def get_image_attributes(song_file):
     anger = 0
     sorrow = 0
     for face in faces:
-        if ((face.anger_likelihood == 4) | (face.anger_likelihood == 5)):
+        if ((face.anger_likelihood == 4) | (face.anger_likelihood == 5) | (face.anger_likelihood == 3)):
             anger += 1
-        if ((face.joy_likelihood == 4) | (face.joy_likelihood == 5)):
+        if ((face.joy_likelihood == 4) | (face.joy_likelihood == 5) | (face.joy_likelihood == 3)):
             joy += 1
-        if ((face.sorrow_likelihood == 4) | (face.sorrow_likelihood == 5)):
+        if ((face.sorrow_likelihood == 4) | (face.sorrow_likelihood == 5) | (face.sorrow_likelihood == 3)):
             sorrow += 1
-
+    print([["pos", joy], ["neg", anger], ["neg", sorrow]])
     emotion = max([["pos", joy], ["neg", anger], ["neg", sorrow]], key = lambda x: x[1])[0]
     # print(emotion)
 
