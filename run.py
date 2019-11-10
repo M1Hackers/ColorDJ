@@ -20,7 +20,7 @@ def songify_sms_image():
     if request.values['NumMedia'] != '0':
         # Download user image.
         image_url = request.values['MediaUrl0']
-        image = io.BytesIO(requests.get(image_url).content)
+        image = requests.get(image_url).content
 
         # Analyze image using Cloud Vision API.
         image_attr = get_image_attributes(image)

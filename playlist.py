@@ -34,7 +34,7 @@ def retrieve_already_token():
 # tracks is a list of IDs
 # main_label is a string
 # returns: URL of playlist
-def make_playlist(image, main_label, tracks):
+def make_playlist(image_bytes, main_label, tracks):
     token = retrieve_spotify_token()
     sp = spotipy.Spotify(auth=token)
     # sp = spotipy.Spotify(auth=retrieve_already_token())
@@ -59,7 +59,7 @@ def make_playlist(image, main_label, tracks):
 
     # resize the image and encode
     basewidth = 300
-    img = Image.open(image)
+    img = Image.open(io.BytesIO(image_bytes))
     wpercent = (basewidth/float(img.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
     img = img.resize((basewidth, hsize), Image.ANTIALIAS)
