@@ -1,4 +1,5 @@
 """Main server script for ColorDJ."""
+import os
 import requests
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
@@ -17,12 +18,11 @@ def sms_ahoy_reply():
 
         # Use the message SID as a filename.
         filename = request.values['MessageSid'] + '.jpg'
-        with open('{}/{}'.format("./images", filename), 'wb') as f:
+        filepath = os.path.join(os.getcwd(), "images", filename)
+        with open(filepath, 'wb') as f:
             image_url = request.values['MediaUrl0']
             f.write(requests.get(image_url).content)
 
-        resp.message("Thanks for the image!")
-        filepath = "./images/" + filename
         image_attr = get_image_attributes(filepath)
         song_ids = get_playlist_ids(image_attr)
 
@@ -30,7 +30,7 @@ def sms_ahoy_reply():
             filepath, image_attr["labels"].most_common(1)[0][0], song_ids)
 
         print(playlist_link)
-        resp.message("spotify playlist link is " + playlist_link)
+        resp.message("Listen to your new playlist at " + playlist_link)
     else:
         resp.message("Try sending a picture message.")
 
