@@ -36,8 +36,8 @@ def make_playlist(filename, main_label, tracks):
     sp = spotipy.Spotify(auth=token)
     # sp = spotipy.Spotify(auth=retrieve_already_token())
 
-    r = random.randint(0,1000)
-    playlist = sp.user_playlist_create(username, main_label + "_" + str(r))
+    r = random.randint(0, 1000)
+    playlist = sp.user_playlist_create(username, f"{main_label}_{r}")
     sp.user_playlist_add_tracks(username, playlist["id"], tracks)
 
     # resize the image and encode
