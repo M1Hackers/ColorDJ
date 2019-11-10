@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "colordj",
+  "private_key_id": "12658b766abb0af8126fc119cc5da96a3e2630c2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDfYlzfmhKjwpJy\n9HfMnjjY5TmKrt6BvD7T5efrfXPljq7d5RA4ehd1DM6YNBynMu74B4rLOc9AiPi7\nyfYpIn8ZqTs1Vn2PeUB57D8KUEeT6Cp77yrqiflSs3QkJhpLu9UgbZrv+hJn1sqV\nkEVCL7SXAOKvosxXkGxZ2rRS7iRNMjRrCddz3ShBk85cCPLTsDLYpvoXkmYJDy4p\n9cFI34JX46dh9g2vvPO0Bma4sex07q5bOOxFOgKY5AeP7xiDs8iK/AaRGmJfVtC1\nsgEnqb2Pl/sKeaa7ve5JpWNyv+QWvQkanEovd//2ol7B4IXn4ALMfbz82GNFQJq8\nnNMduFOJAgMBAAECggEAG5JrYnWE1LXux9XVJhpG672SVkPqhqKesh6j2zkROa28\nd3q/H2txcwL9SoPPIBONM6vRpa8pXb6yTdJ6Kd5eSANvgZA+//sgOlROvSYGybKr\nsL+m4UtdrOelv5L85qlk32Nr7vAjvrGgMGj95XMYNBW5xSI/3NSAjTAtlvlaHXVo\nggbOLsfQhV3ewcYyRUYFcvcf/rWLlXLza1t+o/Kb/36KXejuhPH7PMi6HRvTQdn1\nw4UrAT/82TWibAHwXq2vPwYHnZxQpwSou24itOcbj/1QLlXWMxKo21FIOLM/hcle\nrU6pFpR15yJI17QuLgbLu7uxeo6BB1lEtRHXtdD0YQKBgQDxPOMzISJrC+G3p3eM\nf3Chi44eFegY9GE8edeYE1PL4JPF8nW95KfrSW3jtglczEH+0xW1ifqLRLLukFpJ\nq45ckc5PwDlZKOLzw8+TVlv6lXCeQoNtJZofk+wzoEQXS2fkGanlsyEX4uNx6Dkd\nbYo2EOyFaa5BBtCfTCqzYCIkqQKBgQDtDcoZIpLy4Mf5EiSaNEJkmoIhwjwPVDPi\nVk0aIouho4a20+vBx4OORMk+frTYOIlxT0Lpb2i3JstJpNUtxF5nxP/B9ZSUT/ho\nDF2ew1lin51Jht/WVckLfEpweXjipEp+DMzMdrBZw3ldaZ4LTiTticzPdnX+cIKU\nyLiDy/sj4QKBgQC2ZtRfZ5FPoUdFBwH0oLN34j5N70B0Beuzv2jNWufEQwVY6ZAv\nScHRvM6zG4QOv36y/8XtYuum/AXTLiCmjWnyAmkdkfmKuciIiijcfbLEUNQ7RY18\nLK9RaxZwnqB9gI2IQgNdY8kE95AEI5Nz9cxIPxmncpXIIzABEqVCxdBrKQKBgEBo\n4cPImCL0HoG3g0h+8JdDQB6KFyWXHG3gQxzZzBTESOM+W62QV1d9qyyW4u5pFjc6\ncRTaV5qEKPI+nknMNFZ/uXprDs7pl7Y1ve5YZ94bPnJu+jzTnEfJorRC3Sy/tRng\nwni/uxT4vu45t16dAf2k1oh8SH009tYUX8Y302ohAoGAFO3HahVBKm4KYUYRcIHf\nc22pyPb6i9WSJbWX2uwsSHn+dBw2AOShMc9SuBf9FhULqgLcFQIHtQY6IjjJw6lD\nJGFYfzAAN27xA9mWhI7iBG0mftvKHKYjTC0GjXogM4N8gflN/QY3GMjGrtiajxBh\nF2x+JdQIP24fr6un8lCB1vQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "colordjvision@colordj.iam.gserviceaccount.com",
+  "client_id": "115100790823293915780",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/colordjvision%40colordj.iam.gserviceaccount.com"
+}

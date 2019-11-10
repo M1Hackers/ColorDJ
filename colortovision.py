@@ -1,5 +1,5 @@
 import os
-# import io
+import io
 import colorsys
 
 from google.cloud import vision
