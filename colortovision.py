@@ -90,7 +90,7 @@ def get_playlist_ids(song_attributes):
 
 	# for index, row in top2018.iterrows():
 	# 	if row["id"] in playlist:
-Add a like or dislike rating to a video or remove a rating from a video. Try it now.
+        #Add a like or dislike rating to a video or remove a rating from a video. Try it now.
 	# 		print(row["name"])
 	return playlist
 
