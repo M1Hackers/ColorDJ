@@ -1,7 +1,9 @@
 # Download the twilio-python library from twilio.com/docs/libraries/python
+# import colortovision
 import requests
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
+from colortovision import *
 
 app = Flask(__name__)
 
@@ -20,7 +22,11 @@ def sms_ahoy_reply():
            f.write(requests.get(image_url).content)
 
         resp.message("Thanks for the image!")
-        resp.message("spotify playlist link")
+        filepath = "./images/" + filename
+        image_attr = get_image_attributes(filepath)
+        playlist = get_playlist_ids(image_attr)
+        print(playlist)
+        resp.message("spotify playlist link" + playlist[0])
     else:
         resp.message("Try sending a picture message.")
     
