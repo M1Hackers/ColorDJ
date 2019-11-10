@@ -17,17 +17,10 @@ import random
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "ColorDJ-c6da10562c7b.json"
 
 
-def get_image_attributes(song_file):
+def get_image_attributes(image):
     client = vision.ImageAnnotatorClient()
     language_client = language.LanguageServiceClient()
-
-    file_name = os.path.abspath(song_file)
-
-    # Loads the image into memory.
-    with open(file_name, 'rb') as image_file:
-        content = image_file.read()
-
-    image = types.Image(content=content)
+    image = types.Image(content=image.read())
 
     # Performs label detection on the image file.
     label_response = client.label_detection(image=image)
