@@ -69,7 +69,7 @@ def get_image_attributes(song_file):
         "lightness": lightness,
         "sentiment_score": sentiment_score,
         "sentiment_mag": sentiment_mag,
-        "labels": labels,
+        "labels": [label.description for label in labels],
         "temperature": temperature,
     }
 
