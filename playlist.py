@@ -55,10 +55,10 @@ def make_playlist(filename, main_label, tracks):
     # add original image as playlist cover image
     endpoint_url = "https://api.spotify.com/v1/playlists/{playlist_id}/images"
     request_body = json.dumps({
-              "playlist_id": playlist["id"],
-              "Content-Type": jpg_text_encoded
-              "public": False
-            })
+        "playlist_id": playlist["id"],
+        "Content-Type": jpg_text_encoded,
+        "public": False,
+    })
 
     response = requests.put(url = endpoint_url, data = request_body, headers={"Content-Type":"application/json", 
                             "Authorization":f"Bearer {token}"})
