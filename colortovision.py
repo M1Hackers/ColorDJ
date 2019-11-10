@@ -65,13 +65,8 @@ def get_image_attributes(song_file):
 	sentiment_score = sentiment.score
 	sentiment_mag = sentiment.magnitude
 
-<<<<<<< HEAD
-	return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag}
-	
-=======
         return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag, "labels":labels}
 
->>>>>>> cd51d9f1f0e602aabd5d77c37956e3033389e8cc
 # song_attributes dictionary:
 # "saturation" : (float) saturation value of an image [0,1]
 # "lightness" : (float) lightness value of an image [0,1]
