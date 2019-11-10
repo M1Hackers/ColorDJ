@@ -51,8 +51,10 @@ def get_image_attributes(song_file):
 	# print("total:weight: ", total_weight)
 
 	sentiment_text = ""
+	label_list = []
 	for label in labels:
 		sentiment_text += label.description + " "
+		label_list.append(label.description)
 
 	document = language_types.Document(
 		content=sentiment_text[:-1],
@@ -63,9 +65,7 @@ def get_image_attributes(song_file):
 
 	sentiment_score = sentiment.score
 	sentiment_mag = sentiment.magnitude
-
-
-    return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag, "labels":labels}
+	return {"saturation":saturation, "lightness":lightness, "sentiment_score":sentiment_score, "sentiment_mag":sentiment_mag, "labels":label_list}
 
 # song_attributes dictionary:
 # "saturation" : (float) saturation value of an image [0,1]

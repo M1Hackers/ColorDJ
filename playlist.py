@@ -64,6 +64,7 @@ def make_playlist(filename, main_label, tracks):
                             "Authorization":f"Bearer {token}"})
     print(response.status_code)
 
+
 if __name__ == "__main__":
     url = make_playlist("bright", "", ['6DCZcSspjsKoFjzjrWoCdn', '6V1bu6o1Yo5ZXnsCJU8Ovk', '76cy1WJvNGJTj78UqeA5zr', '1rfofaqEpACxVEHIZBJe6W', '3swc6WTsr7rl9DqQKQA55C'])
     print(url)
