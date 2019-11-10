@@ -8,6 +8,8 @@ from PIL import Image
 
 username = '6zqf0q9qifvh19a2wyub582ms'
 
+emojis = [':D', ':)', ':O','://',"o.o",";_;", "XD", "T.T", ">:(", ":')", ":|", ";)"]
+
 import spotipy.util as util
 
 def retrieve_client_info():
